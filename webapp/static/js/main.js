@@ -15,36 +15,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } catch (error) {
             console.error("Request failed:", error);
-            alert("Произошла ошибка. Попробуйте снова.");
         }
     }
 
-    function toggleButtonState(button, data, stateKey, counterKey) {
-        const isActive = button.dataset.state === stateKey;
-        const newState = isActive ? `not_${stateKey}` : stateKey;
-        button.dataset.state = newState;
-        button.querySelector(".counter").textContent = data[counterKey];
-        button.classList.toggle(stateKey, !isActive);
-    }
-
     document.querySelectorAll(".like-btn").forEach((button) => {
-        button.addEventListener("click", async () => {
+        button.addEventListener("click", async (event) => {
+            event.preventDefault();
             const url = button.dataset.url;
-            const method = button.dataset.state === "liked" ? "DELETE" : "POST";
-            const data = await makeRequest(url, method);
-            if (data) {
-                toggleButtonState(button, data, "liked", "likes_count");
-            }
-        });
-    });
+            const isLiked = button.classList.contains("liked");
+            const method = isLiked ? "DELETE" : "POST";
 
-    document.querySelectorAll(".dislike-btn").forEach((button) => {
-        button.addEventListener("click", async () => {
-            const url = button.dataset.url;
-            const method = button.dataset.state === "disliked" ? "DELETE" : "POST";
             const data = await makeRequest(url, method);
             if (data) {
-                toggleButtonState(button, data, "disliked", "dislikes_count");
+                button.querySelector(".counter").textContent = data.likes_count;
+                button.classList.toggle("liked", !isLiked);
             }
         });
     });

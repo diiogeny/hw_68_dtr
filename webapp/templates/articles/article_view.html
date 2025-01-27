@@ -42,19 +42,17 @@
         </div>
     </div>
 
-    <div class="mt-3">
-        <button class="like-btn {% if user in article.likes.all %}liked{% endif %}"
-                data-url="{% url 'webapp:article_like' article.pk %}"
-                data-state="{% if user in article.likes.all %}liked{% else %}not_liked{% endif %}">
-            👍 Лайк (<span class="counter">{{ article.likes.count }}</span>)
-        </button>
+        <div>
+    <button class="like-btn btn {% if user in article.likes.all %}btn-success{% else %}btn-outline-success{% endif %}"
+            data-url="{% url 'webapp:article_like' article.pk %}">
+        ❤️ <span class="counter">{{ article.likes.count }}</span>
+    </button>
 
-        <button class="dislike-btn {% if user in article.dislikes.all %}disliked{% endif %}"
-                data-url="{% url 'webapp:article_dislike' article.pk %}"
-                data-state="{% if user in article.dislikes.all %}disliked{% else %}not_disliked{% endif %}">
-            👎 Дизлайк (<span class="counter">{{ article.dislikes.count }}</span>)
-        </button>
-    </div>
+    <button class="dislike-btn btn {% if user in article.dislikes.all %}btn-danger{% else %}btn-outline-danger{% endif %}"
+            data-url="{% url 'webapp:article_dislike' article.pk %}">
+        👎 <span class="counter">{{ article.dislikes.count }}</span>
+    </button>
+</div>
 
     <h3 class="mt-3">Комментарии:</h3>
     <div class="row">
