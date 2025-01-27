@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block menu %}
+    {% if perms.webapp.change_article or request.user == article.author %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'webapp:article_update' article.id %}">Изменить</a>
+        </li>
+    {% endif %}
+
+    {% if perms.webapp.delete_article or request.user == article.author %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'webapp:article_delete' article.id %}">Удалить</a>
+        </li>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'webapp:comment_add' article.id %}">Добавить комментарий</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            Автор: {{ article.author }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ article.title }}</h5>
+            <p class="card-text">{{ article.content }}</p>
+
+            {% if article.tags.exists %}
+                <p class="card-text">
+                    Теги:
+                    {% for tag in article.tags.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            <a href="{% url 'webapp:article_test' article.pk %}" class="btn btn-primary article_link">Тест</a>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <button class="like-btn {% if user in article.likes.all %}liked{% endif %}"
+                data-url="{% url 'webapp:article_like' article.pk %}"
+                data-state="{% if user in article.likes.all %}liked{% else %}not_liked{% endif %}">
+            👍 Лайк (<span class="counter">{{ article.likes.count }}</span>)
+        </button>
+
+        <button class="dislike-btn {% if user in article.dislikes.all %}disliked{% endif %}"
+                data-url="{% url 'webapp:article_dislike' article.pk %}"
+                data-state="{% if user in article.dislikes.all %}disliked{% else %}not_disliked{% endif %}">
+            👎 Дизлайк (<span class="counter">{{ article.dislikes.count }}</span>)
+        </button>
+    </div>
+
+    <h3 class="mt-3">Комментарии:</h3>
+    <div class="row">
+        {% for comment in comments %}
+            <div class="col-12">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h5 class="card-title">Автор: {{ comment.author }}</h5>
+                        <p class="card-text">{{ comment.text }}</p>
+
+                        {% if perms.webapp.change_comment or request.user == comment.author %}
+                            <a href="{% url 'webapp:comment_update' comment.pk %}" class="btn btn-primary">Изменить</a>
+                        {% endif %}
+
+                        {% if perms.webapp.delete_comment or request.user == comment.author %}
+                            <a href="{% url 'webapp:comment_delete' comment.pk %}" class="btn btn-danger">Удалить</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Комментариев нет</p>
+        {% endfor %}
+    </div>
+{% endblock %}

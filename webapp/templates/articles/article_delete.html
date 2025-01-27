@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Удаление Статьи
+{% endblock %}
+
+{% block content %}
+    <h1>Вы действительно хотите удалить статью "{{ article.title }}" ?</h1>
+    <form method="post">
+    {% csrf_token %}
+        <input type="submit" value="Да">
+    </form>
+    <a href="{% url 'webapp:article_detail' article.id %}">Нет</a>
+{% endblock %}

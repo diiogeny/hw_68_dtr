@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Создание статьи{% endblock %}
+
+{% block content %}
+<h1>Создание Статьи</h1>
+
+<form action="{% url 'webapp:article_add' %}" method="post">
+    {% include 'partial/form.html' with button_text="Создать" %}
+</form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Статьи{% endblock %}
+{% block menu %}
+    {% if request.user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'webapp:article_add' %}">Создать статью</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>Статьи</h1>
+    <div class="my-2">
+        {% include 'partial/search_form.html' with form=search_form %}
+    </div>
+
+    {% include 'partial/article_list.html' %}
+{% endblock %}

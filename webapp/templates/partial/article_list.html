@@ -1,0 +1,27 @@
+{% if is_paginated %}
+    <div class="my-2">
+        {% include 'partial/pagination.html' %}
+    </div>
+{% endif %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for article in articles %}
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">Автор: {{ article.author }}</p>
+                    <span id="article_{{ article.id }}"></span>
+                    <a href="{% url "webapp:article_detail" article.pk %}" class="btn btn-primary">Подробнее</a>
+                    {% if perms.webapp.change_article or request.user == article.author %}
+                        <a href="{% url "webapp:article_update" article.pk %}" class="btn btn-primary">Изменить</a>
+                    {% endif %}
+                    {% if perms.webapp.delete_article or request.user == article.author %}
+                        <a href="{% url "webapp:article_delete" article.pk %}" class="btn btn-primary">Удалить</a>
+                    {% endif %}
+                <a href="{% url "webapp:article_test" article.pk %}" class="btn btn-primary article_link">Нажми</a>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+</div>
