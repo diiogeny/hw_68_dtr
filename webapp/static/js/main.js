@@ -18,18 +18,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    document.querySelectorAll(".like-btn").forEach((button) => {
+    function handleButton(button, stateKey, counterKey) {
         button.addEventListener("click", async (event) => {
             event.preventDefault();
             const url = button.dataset.url;
-            const isLiked = button.classList.contains("liked");
-            const method = isLiked ? "DELETE" : "POST";
+            const isActive = button.classList.contains(stateKey);
+            const method = isActive ? "DELETE" : "POST";
 
             const data = await makeRequest(url, method);
             if (data) {
-                button.querySelector(".counter").textContent = data.likes_count;
-                button.classList.toggle("liked", !isLiked);
+                button.querySelector(".counter").textContent = data[counterKey];
+                button.classList.toggle(stateKey, !isActive);
             }
         });
+    }
+
+    document.querySelectorAll(".like-btn").forEach((button) => {
+        handleButton(button, "liked", "likes_count");
+    });
+
+    document.querySelectorAll(".dislike-btn").forEach((button) => {
+        handleButton(button, "disliked", "dislikes_count");
     });
 });
