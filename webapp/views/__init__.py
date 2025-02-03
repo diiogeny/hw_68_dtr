@@ -5,4 +5,5 @@ from .articles import (ArticleListView,
                        ArticleDeleteView,
                        TestView)
 
-from .comments import CommentsCreateView, CommentsUpdateView, CommentsDeleteView
+from .comments import CommentsCreateView, CommentsUpdateView, CommentsDeleteView, CommentListView, CommentDetailView
+
