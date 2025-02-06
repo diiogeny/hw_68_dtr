@@ -3,18 +3,22 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch(url, {
                 method: method,
+                credentials: "same-origin",
                 headers: {
                     "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
                     "Content-Type": "application/json",
                 },
+                body: JSON.stringify({}), // Коррекция: API требует тело запроса
             });
-            if (response.ok) {
-                return await response.json();
-            } else {
+
+            if (!response.ok) {
                 throw new Error(`HTTP Error: ${response.status}`);
             }
+
+            return await response.json();
         } catch (error) {
             console.error("Request failed:", error);
+            return null;
         }
     }
 
@@ -22,13 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", async (event) => {
             event.preventDefault();
             const url = button.dataset.url;
-            const isActive = button.classList.contains(stateKey);
-            const method = isActive ? "DELETE" : "POST";
 
-            const data = await makeRequest(url, method);
+            const data = await makeRequest(url);
             if (data) {
                 button.querySelector(".counter").textContent = data[counterKey];
-                button.classList.toggle(stateKey, !isActive);
+                button.classList.toggle(stateKey, data[stateKey]); // Коррекция: теперь корректно обновляет UI
             }
         });
     }

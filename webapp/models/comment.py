@@ -16,12 +16,14 @@ class Comment(BaseModel):
     dislikes = models.ManyToManyField(User, related_name='disliked_comments', blank=True, verbose_name='Дизлайки')
 
     def like(self, user):
+        if user in self.dislikes.all():
+            self.dislikes.remove(user)
         self.likes.add(user)
-        self.dislikes.remove(user)
 
     def dislike(self, user):
+        if user in self.likes.all():
+            self.likes.remove(user)
         self.dislikes.add(user)
-        self.likes.remove(user)
 
     def is_liked_by(self, user):
         return self.likes.filter(pk=user.pk).exists()

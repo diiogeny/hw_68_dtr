@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% block title %}Статьи{% endblock %}
+
 {% block menu %}
     {% if request.user.is_authenticated %}
         <li class="nav-item">
@@ -11,8 +13,12 @@
 {% block content %}
     <h1>Статьи</h1>
     <div class="my-2">
-        {% include 'partial/search_form.html' with form=search_form %}
+        {% if search_form %}
+            {% include 'partial/search_form.html' with form=search_form %}
+        {% endif %}
     </div>
 
-    {% include 'partial/article_list.html' %}
+    <div class="container">
+        {% include 'partial/article_list.html' %}
+    </div>
 {% endblock %}

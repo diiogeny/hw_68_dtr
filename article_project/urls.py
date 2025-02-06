@@ -18,9 +18,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+from webapp.views.home import home_view
 
+
+def redirect_to_api(request):
+    return redirect("/api/articles/")
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('webapp.urls')),
+    path("api/", include("webapp.urls")),
     path('accounts/', include('accounts.urls', namespace='accounts')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("", home_view, name="home"),
+]
